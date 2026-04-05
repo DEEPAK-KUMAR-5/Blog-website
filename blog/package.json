@@ -3,14 +3,21 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "mian":"index.js",
   "scripts": {
-    "dev": "vite",
+    "dev": "nodemon server/index.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.2",
+    "dotenv": "^17.4.0",
+    "express": "^5.2.1",
+    "mongo": "^0.1.0",
+    "mongoos": "^0.0.1-security",
+    "mongoose": "^9.4.1",
+    "nodemon": "^3.1.14",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "tailwindcss": "^4.2.2"
