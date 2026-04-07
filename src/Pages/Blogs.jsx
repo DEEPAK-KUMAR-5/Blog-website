@@ -1,12 +1,14 @@
+import React from "react";
+
 const Blogs = ({ posts }) => {
-  // Fallback data in case backend not ready
   const defaultPosts = [
     {
       id: 1,
       title: "React Tips & Tricks",
       author: "Himanshu",
       category: "React",
-      description: "Learn the best practices for React development with hooks and modern patterns.",
+      description:
+        "Learn the best practices for React development with hooks and modern patterns.",
       image: "https://source.unsplash.com/400x250/?react,code",
     },
     {
@@ -14,7 +16,8 @@ const Blogs = ({ posts }) => {
       title: "Tailwind Advanced Styling",
       author: "Team",
       category: "CSS",
-      description: "Create responsive, modern UI designs using TailwindCSS grid, flex, and utilities.",
+      description:
+        "Create responsive, modern UI designs using TailwindCSS grid, flex, and utilities.",
       image: "https://source.unsplash.com/400x250/?css,design",
     },
     {
@@ -22,7 +25,8 @@ const Blogs = ({ posts }) => {
       title: "Node.js Best Practices",
       author: "Backend",
       category: "Node.js",
-      description: "Master backend development using Node.js, Express, and database integration.",
+      description:
+        "Master backend development using Node.js, Express, and database integration.",
       image: "https://source.unsplash.com/400x250/?nodejs,backend",
     },
     {
@@ -30,7 +34,8 @@ const Blogs = ({ posts }) => {
       title: "JavaScript ES2026 Features",
       author: "Himanshu",
       category: "JS",
-      description: "Explore the latest JavaScript features and syntax improvements for modern apps.",
+      description:
+        "Explore the latest JavaScript features and syntax improvements for modern apps.",
       image: "https://source.unsplash.com/400x250/?javascript,code",
     },
   ];
@@ -50,11 +55,13 @@ const Blogs = ({ posts }) => {
             className="bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-md hover:shadow-xl hover:scale-105 transition-all flex flex-col"
           >
             {/* Image */}
-            <img
-              src={post.image}
-              alt={post.title}
-              className="w-full h-48 object-cover rounded-t-xl"
-            />
+            {post.image && (
+              <img
+                src={post.image}
+                alt={post.title}
+                className="w-full h-48 object-cover rounded-t-xl"
+              />
+            )}
 
             {/* Content */}
             <div className="p-4 flex flex-col flex-1">
@@ -71,8 +78,21 @@ const Blogs = ({ posts }) => {
               {/* Description */}
               <p className="text-slate-300 text-sm flex-1 break-words">{post.description}</p>
 
-              {/* Read Button */}
-              <button className="mt-4 px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-sm font-semibold shadow hover:scale-105 transition">
+              {/* Action Buttons (UI only) */}
+              <div className="flex gap-4 mt-3 text-sm text-slate-400">
+                <button className="flex items-center gap-1 cursor-pointer">
+                  ❤️ Like
+                </button>
+                <button className="flex items-center gap-1 cursor-pointer">
+                  💬 Comment
+                </button>
+                <button className="flex items-center gap-1 cursor-pointer">
+                  🗑 Delete
+                </button>
+              </div>
+
+              {/* Read / Surf Button (UI only) */}
+              <button className="mt-4 px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-sm font-semibold shadow hover:scale-105 transition cursor-pointer">
                 Read More
               </button>
             </div>

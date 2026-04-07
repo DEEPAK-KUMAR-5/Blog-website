@@ -38,13 +38,28 @@ const Navbar = () => {
             {item.name}
           </NavLink>
         ))}
+
+        {/* Get Started */}
+        <Link
+          to="/login"
+          className="px-5 py-2 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold shadow-md hover:scale-105 transition-all"
+        >
+          Get Started
+        </Link>
+
+        {/* Dashboard Button */}
+        <Link
+          to="/dashboard"
+          className="px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-sm font-semibold shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:scale-105 transition-all"
+        >
+          Dashboard
+        </Link>
       </div>
 
-      {/* Right Section + Hamburger */}
-      <div className="flex items-center gap-4">
-        {/* Mobile Hamburger */}
+      {/* Mobile Hamburger */}
+      <div className="md:hidden flex items-center gap-4">
         <button
-          className="md:hidden text-slate-400 hover:text-cyan-400 focus:outline-none"
+          className="text-slate-400 hover:text-cyan-400 focus:outline-none"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? (
@@ -57,30 +72,6 @@ const Navbar = () => {
             </svg>
           )}
         </button>
-
-        {/* Sign In */}
-        <Link
-          to="/login"
-          className="hidden md:block text-slate-300 hover:text-white text-sm font-medium transition"
-        >
-          Sign In
-        </Link>
-
-        {/* Sign Up */}
-        <Link
-          to="/register"
-          className="hidden md:block px-5 py-2 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold shadow-md hover:scale-105 transition-all"
-        >
-          Get Started
-        </Link>
-
-        {/* Dashboard Button */}
-        <Link
-          to="/dashboard"
-          className="hidden md:flex px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-sm font-semibold shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:scale-105 transition-all"
-        >
-          Dashboard
-        </Link>
       </div>
 
       {/* Mobile Menu */}
@@ -101,23 +92,23 @@ const Navbar = () => {
             </NavLink>
           ))}
 
-          {/* Mobile Sign In / Sign Up */}
-          <div className="flex flex-col gap-2 mt-4">
-            <Link
-              to="/login"
-              onClick={() => setIsOpen(false)}
-              className="text-slate-300 hover:text-white text-base font-medium transition"
-            >
-              Sign In
-            </Link>
-            <Link
-              to="/register"
-              onClick={() => setIsOpen(false)}
-              className="px-5 py-2 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-base font-semibold shadow-md hover:scale-105 transition-all"
-            >
-              Get Started
-            </Link>
-          </div>
+          {/* Mobile Get Started */}
+          <Link
+            to="/login"
+            onClick={() => setIsOpen(false)}
+            className="px-5 py-2 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-base font-semibold shadow-md hover:scale-105 transition-all"
+          >
+            Get Started
+          </Link>
+
+          {/* Mobile Dashboard */}
+          <Link
+            to="/dashboard"
+            onClick={() => setIsOpen(false)}
+            className="px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-base font-semibold shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:scale-105 transition-all"
+          >
+            Dashboard
+          </Link>
         </div>
       )}
     </nav>

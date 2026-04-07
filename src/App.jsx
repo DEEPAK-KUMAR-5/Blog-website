@@ -7,7 +7,7 @@ import Blogs from './Pages/Blogs';
 import Bookmarks from './Pages/Bookmarks';
 import Categories from './Pages/Categories';
 import Trending from './Pages/Trending'; // ✅ correct import
-
+import Login from './Pages/Login';
 // Backend sample data for Blogs
 const backendBlogData = [
   {
@@ -27,6 +27,7 @@ const backendBlogData = [
     image: "https://source.unsplash.com/400x250/?css,design",
   },
 ];
+
 
 // Backend sample data for Bookmarks
 const backendBookmarksData = [
@@ -52,6 +53,7 @@ function App() {
             <Route path="/categories" element={<Categories />} />
             <Route path="/bookmarks" element={<Bookmarks bookmarks={backendBookmarksData} />} />
             <Route path="/trending" element={<Trending />} /> {/* ✅ route corrected */}
+            <Route path="/login" element={<Login />} />
           </Routes>
 
         </div>

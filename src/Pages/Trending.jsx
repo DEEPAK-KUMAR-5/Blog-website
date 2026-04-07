@@ -50,11 +50,13 @@ const Trendings = () => {
             className="bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-md hover:shadow-xl hover:scale-105 transition-all flex flex-col"
           >
             {/* Image */}
-            <img
-              src={blog.image}
-              alt={blog.title}
-              className="w-full h-48 object-cover rounded-t-xl"
-            />
+            {blog.image && (
+              <img
+                src={blog.image}
+                alt={blog.title}
+                className="w-full h-48 object-cover rounded-t-xl"
+              />
+            )}
 
             {/* Content */}
             <div className="p-4 flex flex-col flex-1">
@@ -71,8 +73,15 @@ const Trendings = () => {
               {/* Description */}
               <p className="text-slate-300 text-sm flex-1 break-words">{blog.description}</p>
 
-              {/* Button */}
-              <button className="mt-4 px-4 py-2 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white text-sm font-semibold shadow hover:scale-105 transition">
+              {/* Action Buttons (UI-only placeholders) */}
+              <div className="flex gap-4 mt-3 text-sm text-slate-400">
+                <button className="flex items-center gap-1 cursor-pointer">❤️ Like</button>
+                <button className="flex items-center gap-1 cursor-pointer">💬 Comment</button>
+                <button className="flex items-center gap-1 cursor-pointer">🗑 Delete</button>
+              </div>
+
+              {/* Read Now button (UI-only) */}
+              <button className="mt-4 px-4 py-2 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white text-sm font-semibold shadow hover:scale-105 transition cursor-pointer">
                 Read Now
               </button>
             </div>
