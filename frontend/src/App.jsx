@@ -5,6 +5,7 @@ import Home from './Pages/Home';
 import Dashboard from './Pages/Dashboard';
 import Blogs from './Pages/Blogs';
 import Bookmarks from './Pages/Bookmarks';
+import AuthPage from './Pages/Login';
 
 // Backend sample data
 const backendBlogData = [
@@ -48,6 +49,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/blogs" element={<Blogs posts={backendBlogData} />} />
             <Route path="/bookmarks" element={<Bookmarks bookmarks={backendBookmarksData} />} />
+            <Route path="/login" element={<AuthPage />} />
           </Routes>
 
         </div>

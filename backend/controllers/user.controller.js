@@ -3,9 +3,9 @@ import {ApiError} from "../utility/ApiError.js"
 import { User } from "../models/user.model.js";
 import{UploadCloud} from "../utility/Cloudinary.js"
 import { ApiResponse } from "../utility/ApiResponse.js";
+import bcrypt from "bcrypt";
 
 const registerUser=(asyncHandler(async(req,res)=>{
-    
     const{name,email,password}=req.body
     if([name,email,password].some((field)=>{
         return field?.trim() === ""}
@@ -16,11 +16,11 @@ const registerUser=(asyncHandler(async(req,res)=>{
     if(User_exist){
         throw new ApiError(409,"email already in use");
     }
-    const avatar_localpath=req.files?.avatar[0]?.path;
+    const avatar_localpath=req.files?.avatar?.[0]?.path;
     if (!avatar_localpath) {
         throw new ApiError(400,"Avatar require")
     }
-    const avatar = await UploadCloud(avatar_localpath)
+    const avatar = await UploadCloud(avatar_localpath)  
     if(!avatar){
         throw new ApiError(400,"Error Upload again please")
     }
@@ -36,10 +36,9 @@ const registerUser=(asyncHandler(async(req,res)=>{
     if (!created_user) {
         throw new ApiError(500,"something went wrong while registering")
     }
-
     return res.status(201).json(
         new ApiResponse(200,created_user,"User registered Successfully")
     )
-
 }))
+
 export {registerUser};

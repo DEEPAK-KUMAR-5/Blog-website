@@ -21,7 +21,7 @@ const Home = () => {
       {/* INTERACTIVE SEARCH BAR */}
       <div className="flex justify-center mb-12">
         <div className="relative group w-full max-w-md">
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
+          <div className="absolute -inset-0.5 from-cyan-400 to-blue-500 rounded-full blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
           <input 
             type="text" 
             value={searchQuery}
@@ -56,8 +56,8 @@ const Home = () => {
         {/* Right Column (Featured Hero Card) */}
         {filteredArticles.filter(a => a.isFeatured).map((article) => (
           <div key={article.id} className="relative rounded-3xl overflow-hidden border border-slate-700/50 col-span-1 lg:col-span-2 group min-h-[500px] cursor-pointer shadow-2xl hover:border-cyan-500/30 transition-all">
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 group-hover:scale-105 transition-transform duration-700"></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/60 to-transparent z-10"></div>
+            <div className="absolute inset-0  from-slate-800 to-slate-900 group-hover:scale-105 transition-transform duration-700"></div>
+            <div className="absolute inset-0  from-[#0f172a] via-[#0f172a]/60 to-transparent z-10"></div>
             
             <div className="absolute bottom-0 left-0 p-10 z-20 w-full">
               <span className="px-3 py-1 bg-blue-500/20 text-blue-300 border border-blue-500/30 rounded-full text-xs font-semibold tracking-wide backdrop-blur-sm mb-4 inline-block hover:bg-blue-500/40 transition-colors">
@@ -74,7 +74,7 @@ const Home = () => {
                 </button>
                 
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-500 p-[2px]">
+                  <div className="w-10 h-10 rounded-full  from-cyan-500 to-blue-500 p-[2px]">
                     <div className="w-full h-full bg-slate-900 rounded-full"></div>
                   </div>
                   <div className="text-sm">
