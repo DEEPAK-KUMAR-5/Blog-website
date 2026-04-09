@@ -1,11 +1,9 @@
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 import { User } from "../models/user.model.js";
 import { asyncHandler } from "../utility/asyncHandler.js";
 import { ApiError } from "../utility/ApiError.js";
 import { ApiResponse } from "../utility/ApiResponse.js";
 
-export const loginUser = asyncHandler(async (req, res) => {
+const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password) {
     throw new ApiError(400, "Email and password are required");
@@ -14,36 +12,42 @@ export const loginUser = asyncHandler(async (req, res) => {
   if (!user) {
     throw new ApiError(404, "User not found");
   }
-  const isPasswordValid = await bcrypt.compare(password, user.password);
+  const isPasswordValid = await user.isCorrect(password);
   if (!isPasswordValid) {
     throw new ApiError(401, "Invalid credentials");
   }
-  const token = jwt.sign(
-    { _id: user._id },
-    process.env.JWT_SECRET,
-    { expiresIn: "7d" }
-  );
-  const safeUser = await User.findById(user._id).select("-password");
-  return res.status(200).json(
-    new ApiResponse(200, { user: safeUser, token }, "Login successful")
-  );
+  const accessToken = user.generateAccessToken();
+  const refreshToken = user.generateRefreshToken();
+  user.refreshToken = refreshToken;
+  await user.save({ validateBeforeSave: false });
+  const safeUser = await User.findById(user._id).select("-password -refreshToken");
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    })
+    .cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    })
+    .json(
+      new ApiResponse(200, { user: safeUser, accessToken }, "Login successful")
+    );
 });
-export const verifyJWT = asyncHandler(async (req, res, next) => {
-  const token =
-    req.header("Authorization")?.replace("Bearer ", "") || null;
-  if (!token) {
-    throw new ApiError(401, "Unauthorized");
-  }
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  const user = await User.findById(decoded._id).select("-password");
-  if (!user) {
-    throw new ApiError(401, "Invalid token");
-  }
-  req.user = user;
-  next();
+const logoutUser = asyncHandler(async (req, res) => {
+  await User.findByIdAndUpdate(req.user._id, { $unset: { refreshToken: 1 } });
+  return res
+    .status(200)
+    .clearCookie("accessToken")
+    .clearCookie("refreshToken")
+    .json(new ApiResponse(200, {}, "Logged out successfully"));
 });
-export const getCurrentUser = asyncHandler(async (req, res) => {
-  return res.status(200).json(
-    new ApiResponse(200, req.user, "User fetched successfully")
-  );
+const getCurrentUser = asyncHandler(async (req, res) => {
+  return res
+    .status(200)
+    .json(new ApiResponse(200, req.user, "User fetched successfully"));
 });
+export { loginUser, logoutUser, getCurrentUser };
