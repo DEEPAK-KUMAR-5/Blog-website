@@ -1,162 +1,108 @@
 import { useState } from "react";
-import axios from "axios";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
-const AuthPage = () => {
-  const [isLogin, setIsLogin] = useState(true);
+const Login = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    avatar: null,
-  });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const successMsg = location.state?.message;
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setError("");
   };
-  const handleFileChange = (e) => {
-    setForm({ ...form, avatar: e.target.files[0] });
-  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    if (!form.email || !form.password) return setError("All fields are required");
+    setLoading(true);
     try {
-      if (!form.email || !form.password || (!isLogin && !form.name)) {
-        return setError("All fields are required");
-      }
-      if (!isLogin && form.password !== form.confirmPassword) {
-        return setError("Passwords do not match");
-      }
-      if (isLogin) {
-        // LOGIN (JSON)
-        const res = await axios.post(
-          "http://localhost:3000/user/login",
-          {
-            email: form.email,
-            password: form.password,
-          }
-        );
-        console.log("Login success:", res.data);
-      } else {
-        // REGISTER (multipart)
-        const formData = new FormData();
-        formData.append("name", form.name);
-        formData.append("email", form.email);
-        formData.append("password", form.password);
-        formData.append("avatar", form.avatar);
-        const res = await axios.post(
-          "http://localhost:3000/user/register",
-          formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
-        console.log("Signup success:", res.data);
-      }
+      await login(form.email, form.password);
+      navigate("/", { replace: true });
     } catch (err) {
-      console.log(err);
-      setError(err.response?.data?.message || "Something went wrong");
+      setError(err.response?.data?.message || "Login failed. Check your credentials.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-slate-900">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-md bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-xl text-white"
-      >
-        <h2 className="text-3xl font-bold mb-6 text-center text-cyan-400">
-          {isLogin ? "Welcome Back 👋" : "Create Account 🚀"}
-        </h2>
-
-        {error && (
-          <p className="text-red-400 text-sm mb-3 text-center">{error}</p>
-        )}
-
-        {!isLogin && (
-          <>
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              value={form.name}
-              onChange={handleChange}
-              className="w-full mb-4 px-4 py-3 rounded-lg bg-white/20 outline-none"
-            />
-
-            {/* Avatar Upload */}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="w-full mb-4 text-sm"
-            />
-          </>
-        )}
-
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          className="w-full mb-4 px-4 py-3 rounded-lg bg-white/20 outline-none"
-        />
-
-        <div className="relative mb-4">
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={handleChange}
-            className="w-full px-4 py-3 rounded-lg bg-white/20 outline-none"
-          />
-          <span
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-3 cursor-pointer"
-          >
-            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-          </span>
+    <div className="min-h-[calc(100vh-57px)] bg-slate-900 flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+            Welcome Back
+          </h1>
+          <p className="text-slate-400 mt-2 text-sm">Sign in to continue to BlogSpace</p>
         </div>
 
-        {!isLogin && (
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={form.confirmPassword}
-            onChange={handleChange}
-            className="w-full mb-6 px-4 py-3 rounded-lg bg-white/20 outline-none"
-          />
-        )}
+        <div className="bg-slate-800/60 backdrop-blur border border-slate-700/50 rounded-2xl p-8 shadow-xl">
+          {successMsg && (
+            <div className="mb-4 p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 text-sm">
+              {successMsg}
+            </div>
+          )}
+          {error && (
+            <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+              {error}
+            </div>
+          )}
 
-        <button
-          type="submit"
-          className="w-full py-3 rounded-full bg-cyan-500 hover:bg-cyan-600 transition"
-        >
-          {isLogin ? "Login" : "Sign Up"}
-        </button>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={form.email}
+              onChange={handleChange}
+              className="w-full bg-slate-900/60 border border-slate-700 text-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyan-500 transition placeholder-slate-500"
+            />
 
-        <p className="text-sm text-center mt-4 text-gray-400">
-          {isLogin ? "Don’t have an account?" : "Already have an account?"}
-          <span
-            onClick={() => {
-              setIsLogin(!isLogin);
-              setError("");
-            }}
-            className="ml-2 text-cyan-400 cursor-pointer"
-          >
-            {isLogin ? "Sign Up" : "Login"}
-          </span>
-        </p>
-      </form>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                value={form.password}
+                onChange={handleChange}
+                className="w-full bg-slate-900/60 border border-slate-700 text-slate-200 rounded-xl px-4 py-3 pr-10 text-sm focus:outline-none focus:border-cyan-500 transition placeholder-slate-500"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3.5 text-slate-400 hover:text-slate-200"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold text-sm hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? "Signing in..." : "Sign In"}
+            </button>
+          </form>
+
+          <p className="text-center text-sm text-slate-400 mt-6">
+            Don't have an account?{" "}
+            <Link to="/register" className="text-cyan-400 hover:underline font-medium">
+              Get Started
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default AuthPage;
+export default Login;

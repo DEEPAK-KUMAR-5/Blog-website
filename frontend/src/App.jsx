@@ -1,61 +1,55 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
+import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Home from "./Pages/Home";
+import Login from "./Pages/Login";
+import Register from "./Pages/Register";
+import Blogs from "./Pages/Blogs";
+import BlogDetail from "./Pages/BlogDetail";
+import Bookmarks from "./Pages/Bookmarks";
+import Categories from "./Pages/Categories";
+import Dashboard from "./Pages/Dashboard";
 
-import Home from './Pages/Home';
-import Dashboard from './Pages/Dashboard';
-import Blogs from './Pages/Blogs';
-import Bookmarks from './Pages/Bookmarks';
-import AuthPage from './Pages/Login';
+const App = () => {
+  const { user, loading } = useAuth();
 
-// Backend sample data
-const backendBlogData = [
-  {
-    id: 1,
-    title: "New React Feature",
-    category: "React",
-    author: "Alice",
-    description: "Learn about the latest React feature and how to use it.",
-    image: "https://source.unsplash.com/400x250/?react,code",
-  },
-  {
-    id: 2,
-    title: "Tailwind Grid Tricks",
-    category: "CSS",
-    author: "Bob",
-    description: "Master advanced Tailwind grid and layout techniques.",
-    image: "https://source.unsplash.com/400x250/?css,design",
-  },
-];
-
-// Backend sample data for Bookmarks
-const backendBookmarksData = [
-  { id: 1, title: "New React Feature", category: "React", author: "Alice" },
-  { id: 2, title: "Tailwind Grid Tricks", category: "CSS", author: "Bob" },
-];
-
-function App() {
-  return (
-    <Router>
-      <div className="min-h-screen bg-slate-900 text-slate-100 relative">
-
-        {/* Background Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[500px] bg-cyan-500/10 blur-[120px] rounded-full pointer-events-none"></div>
-
-        <div className="relative z-10">
-          <Navbar />
-
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/blogs" element={<Blogs posts={backendBlogData} />} />
-            <Route path="/bookmarks" element={<Bookmarks bookmarks={backendBookmarksData} />} />
-            <Route path="/login" element={<AuthPage />} />
-          </Routes>
-
-        </div>
+  // Show spinner while checking auth state — prevents any flash
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
       </div>
-    </Router>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-900">
+      <Navbar />
+      <Routes>
+        {/* ── Guest-only routes ───────────────────────────────── */}
+        <Route
+          path="/register"
+          element={user ? <Navigate to="/" replace /> : <Register />}
+        />
+        <Route
+          path="/login"
+          element={user ? <Navigate to="/" replace /> : <Login />}
+        />
+
+        {/* ── Protected routes ────────────────────────────────── */}
+        <Route path="/"            element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/blogs"       element={<ProtectedRoute><Blogs /></ProtectedRoute>} />
+        <Route path="/blogs/:id"   element={<ProtectedRoute><BlogDetail /></ProtectedRoute>} />
+        <Route path="/bookmarks"   element={<ProtectedRoute><Bookmarks /></ProtectedRoute>} />
+        <Route path="/categories"  element={<ProtectedRoute><Categories /></ProtectedRoute>} />
+        <Route path="/dashboard"   element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+
+        {/* ── Catch-all: guests → /register, users → / ────────── */}
+        <Route path="*" element={<Navigate to={user ? "/" : "/register"} replace />} />
+      </Routes>
+    </div>
   );
-}
+};
 
 export default App;
