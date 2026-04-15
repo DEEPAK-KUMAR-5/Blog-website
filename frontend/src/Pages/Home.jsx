@@ -1,92 +1,170 @@
-import { useState } from 'react';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Search, Heart, Eye, Tag, Calendar } from "lucide-react";
+import { API } from "../context/AuthContext";
 
 const Home = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  // Mock data for our articles
-  const articles = [
-    { id: 1, title: 'The Future of UI Design in 2026', category: 'Technology', isFeatured: false },
-    { id: 2, title: 'Why React is Still King', category: 'Programming', isFeatured: false },
-    { id: 3, title: 'Mastering Modern Web Development Tools', category: 'Featured', isFeatured: true },
-  ];
+  const fetchPosts = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({ page, limit: 12 });
+      if (search) params.append("search", search);
+      const res = await API.get(`/posts?${params}`);
+      setPosts(res.data.data.posts);
+      setTotalPages(res.data.data.totalPages);
+    } catch {
+      setPosts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // Filter articles based on what is typed in the search bar
-  const filteredArticles = articles.filter(article => 
-    article.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => { fetchPosts(); }, [page, search]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setPage(1);
+    setSearch(searchInput);
+  };
+
+  const formatDate = (d) => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
-      
-      {/* INTERACTIVE SEARCH BAR */}
-      <div className="flex justify-center mb-12">
-        <div className="relative group w-full max-w-md">
-          <div className="absolute -inset-0.5 from-cyan-400 to-blue-500 rounded-full blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
-          <input 
-            type="text" 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search articles live..." 
-            className="relative w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-full px-6 py-3 focus:outline-none focus:border-cyan-500 transition-colors"
-          />
-        </div>
+    <div className="min-h-screen bg-slate-900 text-white">
+      {/* Hero */}
+      <div className="border-b border-slate-800 bg-slate-900/50 px-6 py-14 text-center">
+        <h1 className="text-4xl md:text-5xl font-bold mb-3  from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+          Discover Stories
+        </h1>
+        <p className="text-slate-400 mb-8 text-base">Read, write and connect with great minds</p>
+
+        <form onSubmit={handleSearch} className="flex gap-2 max-w-lg mx-auto">
+          <div className="relative flex-1">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+            <input
+              type="text"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder="Search articles..."
+              className="w-full bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-cyan-500 transition placeholder-slate-500"
+            />
+          </div>
+          <button
+            type="submit"
+            className="px-5 py-2.5  from-cyan-500 to-blue-600 text-white text-sm font-semibold rounded-xl hover:scale-105 transition-all"
+          >
+            Search
+          </button>
+        </form>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Left Column (Small Cards) */}
-        <div className="flex flex-col gap-8 col-span-1">
-          {filteredArticles.filter(a => !a.isFeatured).map((article) => (
-            <div key={article.id} className="group relative overflow-hidden rounded-2xl bg-slate-800/50 border border-slate-700/50 hover:border-cyan-500/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 cursor-pointer h-[250px] flex flex-col">
-              <div className="h-32 bg-slate-700/30 w-full group-hover:bg-slate-700/50 transition-colors"></div>
-              <div className="p-5 flex-1 flex flex-col justify-center">
-                <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest mb-2">{article.category}</span>
-                <h3 className="text-lg font-semibold text-slate-200 group-hover:text-white transition-colors line-clamp-2">
-                  {article.title}
-                </h3>
-              </div>
-            </div>
-          ))}
-          {/* Show message if search results are empty */}
-          {filteredArticles.filter(a => !a.isFeatured).length === 0 && (
-             <p className="text-slate-500 text-center mt-10">No small articles found.</p>
-          )}
-        </div>
-
-        {/* Right Column (Featured Hero Card) */}
-        {filteredArticles.filter(a => a.isFeatured).map((article) => (
-          <div key={article.id} className="relative rounded-3xl overflow-hidden border border-slate-700/50 col-span-1 lg:col-span-2 group min-h-[500px] cursor-pointer shadow-2xl hover:border-cyan-500/30 transition-all">
-            <div className="absolute inset-0  from-slate-800 to-slate-900 group-hover:scale-105 transition-transform duration-700"></div>
-            <div className="absolute inset-0  from-[#0f172a] via-[#0f172a]/60 to-transparent z-10"></div>
-            
-            <div className="absolute bottom-0 left-0 p-10 z-20 w-full">
-              <span className="px-3 py-1 bg-blue-500/20 text-blue-300 border border-blue-500/30 rounded-full text-xs font-semibold tracking-wide backdrop-blur-sm mb-4 inline-block hover:bg-blue-500/40 transition-colors">
-                FEATURED
-              </span>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight group-hover:text-cyan-300 transition-colors">
-                {article.title}
-              </h1>
-              
-              <div className="flex justify-between items-center mt-8">
-                <button className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/10 rounded-full transition-all text-sm font-medium flex items-center gap-2 hover:scale-105 active:scale-95">
-                  Read Article
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </button>
-                
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full  from-cyan-500 to-blue-500 p-[2px]">
-                    <div className="w-full h-full bg-slate-900 rounded-full"></div>
-                  </div>
-                  <div className="text-sm">
-                    <p className="text-white font-medium">Sheetal Rai</p>
-                    <p className="text-slate-400 text-xs">Author</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+      {/* Posts Grid */}
+      <div className="max-w-7xl mx-auto px-6 py-10">
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="bg-slate-800/50 rounded-2xl h-72 animate-pulse border border-slate-700/40" />
+            ))}
           </div>
-        ))}
+        ) : posts.length === 0 ? (
+          <div className="text-center py-24 text-slate-500">
+            <p className="text-lg">No posts found.</p>
+            {search && (
+              <button onClick={() => { setSearch(""); setSearchInput(""); }} className="mt-3 text-cyan-400 text-sm hover:underline">
+                Clear search
+              </button>
+            )}
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {posts.map((post) => (
+                <Link
+                  key={post._id}
+                  to={`/blogs/${post._id}`}
+                  className="group bg-slate-800/60 border border-slate-700/40 rounded-2xl overflow-hidden hover:border-cyan-500/40 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/5 transition-all duration-300 flex flex-col"
+                >
+                  {post.image ? (
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="w-full h-44  from-slate-700 to-slate-800 flex items-center justify-center">
+                      <span className="text-4xl">📝</span>
+                    </div>
+                  )}
 
+                  <div className="p-4 flex flex-col flex-1">
+                    {/* Tags */}
+                    {post.tags?.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mb-2">
+                        {post.tags.slice(0, 2).map((tag) => (
+                          <span key={tag} className="text-[11px] font-medium bg-cyan-500/15 text-cyan-400 px-2 py-0.5 rounded-full">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    <h2 className="text-base font-semibold text-slate-200 group-hover:text-white mb-1 line-clamp-2 leading-snug">
+                      {post.title}
+                    </h2>
+
+                    <p className="text-slate-500 text-xs mb-3 line-clamp-2 flex-1">
+                      {post.content?.replace(/<[^>]*>/g, "").slice(0, 100)}...
+                    </p>
+
+                    {/* Author row */}
+                    <div className="flex items-center justify-between mt-auto pt-3 border-t border-slate-700/40">
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={post.author?.avatar || `https://ui-avatars.com/api/?name=${post.author?.name}&background=0f172a&color=22d3ee&size=32`}
+                          alt={post.author?.name}
+                          className="w-6 h-6 rounded-full object-cover"
+                        />
+                        <span className="text-xs text-slate-400">{post.author?.name}</span>
+                      </div>
+                      <div className="flex items-center gap-3 text-slate-500 text-xs">
+                        <span className="flex items-center gap-1"><Heart size={11} />{post.likeCount}</span>
+                        <span className="flex items-center gap-1"><Eye size={11} />{post.views}</span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-3 mt-12">
+                <button
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  className="px-4 py-2 text-sm rounded-xl border border-slate-700 text-slate-400 hover:border-cyan-500 hover:text-cyan-400 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                >
+                  Previous
+                </button>
+                <span className="text-slate-500 text-sm">Page {page} of {totalPages}</span>
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  className="px-4 py-2 text-sm rounded-xl border border-slate-700 text-slate-400 hover:border-cyan-500 hover:text-cyan-400 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
