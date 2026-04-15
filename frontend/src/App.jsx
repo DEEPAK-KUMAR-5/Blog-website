@@ -13,8 +13,6 @@ import Dashboard from "./Pages/Dashboard";
 
 const App = () => {
   const { user, loading } = useAuth();
-
-  // Show spinner while checking auth state — prevents any flash
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">

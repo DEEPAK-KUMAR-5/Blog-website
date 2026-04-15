@@ -7,7 +7,7 @@ import postRouter from "./routes/post.route.js";
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "https://voluble-heliotrope-cbb6c7.netlify.app",
   credentials: true,
 }));
 app.use(express.json());
@@ -17,7 +17,6 @@ app.use(cookieParser());
 app.use("/user", userRouter);
 app.use("/posts", postRouter);
 
-// Global error handler
 app.use((err, req, res, next) => {
   const statusCode = err.statuscode || 500;
   const message = err.message || "Internal Server Error";

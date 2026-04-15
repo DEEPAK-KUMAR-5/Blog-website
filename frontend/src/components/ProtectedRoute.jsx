@@ -3,7 +3,6 @@ import { useAuth } from "../context/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
-
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
@@ -11,11 +10,7 @@ const ProtectedRoute = ({ children }) => {
       </div>
     );
   }
-
-  // Not logged in → send to register page
   if (!user) return <Navigate to="/register" replace />;
-
   return children;
 };
-
 export default ProtectedRoute;

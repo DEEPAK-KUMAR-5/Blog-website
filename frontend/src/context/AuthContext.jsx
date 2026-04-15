@@ -4,7 +4,7 @@ import axios from "axios";
 const AuthContext = createContext(null);
 
 const API = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://blog-website-kxsg.onrender.com",
   withCredentials: true,
 });
 
@@ -13,7 +13,6 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // On mount: read token from localStorage and verify it
   useEffect(() => {
     const savedToken = localStorage.getItem("accessToken");
     if (savedToken) {
@@ -24,7 +23,6 @@ export const AuthProvider = ({ children }) => {
           setToken(savedToken);
         })
         .catch(() => {
-          // Token invalid or expired — clear it
           localStorage.removeItem("accessToken");
           delete API.defaults.headers.common["Authorization"];
           setUser(null);
@@ -50,7 +48,6 @@ export const AuthProvider = ({ children }) => {
     try {
       await API.post("/user/logout");
     } catch {
-      // ignore logout errors
     }
     setUser(null);
     setToken(null);

@@ -39,7 +39,7 @@ const Blogs = () => {
     <div className="min-h-screen bg-slate-900 text-white px-6 py-10">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold  from-cyan-400 to-blue-500 bg-clip-text text-transparent">
             All Blogs
           </h1>
           <form onSubmit={handleSearch} className="flex gap-2">
@@ -53,7 +53,7 @@ const Blogs = () => {
                 className="bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-xl pl-8 pr-4 py-2 focus:outline-none focus:border-cyan-500 transition placeholder-slate-500 w-52"
               />
             </div>
-            <button type="submit" className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold rounded-xl hover:scale-105 transition-all">
+            <button type="submit" className="px-4 py-2  from-cyan-500 to-blue-600 text-white text-sm font-semibold rounded-xl hover:scale-105 transition-all">
               Search
             </button>
           </form>
@@ -79,7 +79,7 @@ const Blogs = () => {
                   {post.image ? (
                     <img src={post.image} alt={post.title} className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500" />
                   ) : (
-                    <div className="w-full h-44 bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center">
+                    <div className="w-full h-44  from-slate-700 to-slate-800 flex items-center justify-center">
                       <span className="text-4xl">📝</span>
                     </div>
                   )}

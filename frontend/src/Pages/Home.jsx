@@ -40,7 +40,7 @@ const Home = () => {
     <div className="min-h-screen bg-slate-900 text-white">
       {/* Hero */}
       <div className="border-b border-slate-800 bg-slate-900/50 px-6 py-14 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+        <h1 className="text-4xl md:text-5xl font-bold mb-3  from-cyan-400 to-blue-500 bg-clip-text text-transparent">
           Discover Stories
         </h1>
         <p className="text-slate-400 mb-8 text-base">Read, write and connect with great minds</p>
@@ -58,7 +58,7 @@ const Home = () => {
           </div>
           <button
             type="submit"
-            className="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold rounded-xl hover:scale-105 transition-all"
+            className="px-5 py-2.5  from-cyan-500 to-blue-600 text-white text-sm font-semibold rounded-xl hover:scale-105 transition-all"
           >
             Search
           </button>
@@ -98,7 +98,7 @@ const Home = () => {
                       className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
-                    <div className="w-full h-44 bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center">
+                    <div className="w-full h-44  from-slate-700 to-slate-800 flex items-center justify-center">
                       <span className="text-4xl">📝</span>
                     </div>
                   )}

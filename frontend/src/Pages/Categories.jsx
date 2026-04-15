@@ -49,7 +49,7 @@ const Categories = () => {
   return (
     <div className="min-h-screen bg-slate-900 text-white px-6 py-10">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
+        <h1 className="text-3xl font-bold  from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
           Categories
         </h1>
         <p className="text-slate-500 text-sm mb-8">Browse posts by topic</p>
@@ -100,7 +100,7 @@ const Categories = () => {
                     {post.image ? (
                       <img src={post.image} alt={post.title} className="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-500" />
                     ) : (
-                      <div className="w-full h-36 bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center">
+                      <div className="w-full h-36  from-slate-700 to-slate-800 flex items-center justify-center">
                         <span className="text-3xl">📝</span>
                       </div>
                     )}
