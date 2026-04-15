@@ -40,7 +40,7 @@ const Register = () => {
 
     setLoading(true);
     try {
-      await axios.post("http://localhost:3000/user/register", formData, {
+      await axios.post("https://blog-website-kxsg.onrender.com/user/register", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       navigate("/login", { replace: true, state: { message: "Account created! Please sign in." } });
