@@ -22,8 +22,8 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Avatar upload failed, please try again");
   }
   const user = await User.create({
-    nammaie,
-    el,
+    name,
+    email,
     password,
     avatar: avatar.secure_url,
   });

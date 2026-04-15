@@ -4,7 +4,7 @@ import axios from "axios";
 const AuthContext = createContext(null);
 
 const API = axios.create({
-  baseURL: "https://blog-website-2xgq.onrender.com",
+  baseURL: "https://blog-website-kxsg.onrender.com",
   withCredentials: true,
 });
 

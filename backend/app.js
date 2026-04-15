@@ -7,7 +7,7 @@ import postRouter from "./routes/post.route.js";
 const app = express();
 
 app.use(cors({
-  origin: "https://blog-website-7v3t.vercel.app",
+  origin: "https://voluble-heliotrope-cbb6c7.netlify.app",
   credentials: true,
 }));
 app.use(express.json());
