@@ -10,6 +10,7 @@ import BlogDetail from "./Pages/BlogDetail";
 import Bookmarks from "./Pages/Bookmarks";
 import Categories from "./Pages/Categories";
 import Dashboard from "./Pages/Dashboard";
+import ChatDrawer from "./components/ChatDrawer";
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -46,6 +47,7 @@ const App = () => {
         {/* ── Catch-all: guests → /register, users → / ────────── */}
         <Route path="*" element={<Navigate to={user ? "/" : "/register"} replace />} />
       </Routes>
+      <ChatDrawer />
     </div>
   );
 };

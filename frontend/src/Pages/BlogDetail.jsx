@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { Heart, Eye, Bookmark, ArrowLeft, Send } from "lucide-react";
 import { API } from "../context/AuthContext";
 import { useAuth } from "../context/AuthContext";
+import { MessageSquare } from "lucide-react";
 
 const BlogDetail = () => {
   const { id } = useParams();
